@@ -41,25 +41,25 @@ These measurements are described as follows in the Human Activity Recognition da
 * the script has been commented directly
 * this readme contains only a summary of the script in the form of the comments from the script
 
-## 1 Merges the training and the test sets to create one data set.
+### 1 Merges the training and the test sets to create one data set.
 * first read x_train and x_test
 * then merge by rbind
 
-## 2 Extracts only the measurements on the mean and standard deviation for each measurement. 
+### 2 Extracts only the measurements on the mean and standard deviation for each measurement. 
 * first read the features table
 * then find indices that match mean() or std() with grep, escaping brackets with fixed=TRUE and merging and sorting indices.
 * finally create subset of data
 
-## 3 Uses descriptive activity names to name the activities in the data set
+### 3 Uses descriptive activity names to name the activities in the data set
 * combine train and test for activities
 * read activity labels and then merge with observations, preserving original order
 
-## 4 Appropriately labels the data set with descriptive variable names. 
+### 4 Appropriately labels the data set with descriptive variable names. 
 
-## 5 From the data set in step 4, creates a second, independent tidy data set 
+### 5 From the data set in step 4, creates a second, independent tidy data set 
 * with the average of each variable for each activity and each subject.
 * first read and merge subjects and add them as an extra column to the data
 * we will use the dplyr package, which we might have to install first
-* then we create the tidy data with group_by and summarise
+ * then we create the tidy data with group_by and summarise
 * and write tidy data in txt 
 
