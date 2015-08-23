@@ -1,70 +1,65 @@
-# GettingAndCleaningData
+## Codebook
+
+Original data was obtained from http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones, a Human Activity Recognition database built from the recordings of 30 subjects (persons) performing 6 different kind of activities of daily living (ADL) while carrying a waist-mounted smartphone with embedded inertial sensors.
+
+The tidy_data.txt summarises either mean (mean) or standard deviation (std) of in total 66 different type of measurements for the 30 subjects and 6 activities. The first two columns of the dataset describe:
+
+* subject: integer numbered from 1 to 30
+* activity: factor description of the activity, based on video's of the experiment
+
+Remaining colums of the dataset describe the mean or standard deviation of one of the following measurement types:
+
+* tBodyAcc-XYZ
+* tGravityAcc-XYZ
+* tBodyAccJerk-XYZ
+* tBodyGyro-XYZ
+* tBodyGyroJerk-XYZ
+* tBodyAccMag
+* tGravityAccMag
+* tBodyAccJerkMag
+* tBodyGyroMag
+* tBodyGyroJerkMag
+* fBodyAcc-XYZ
+* fBodyAccJerk-XYZ
+* fBodyGyro-XYZ
+* fBodyAccMag
+* fBodyAccJerkMag
+* fBodyGyroMag
+* fBodyGyroJerkMag
+
+These measurements are described as follows in the Human Activity Recognition database:
+
+* The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ. These time domain signals (prefix 't' to denote time) were captured at a constant rate of 50 Hz. Then they were filtered using a median filter and a 3rd order low pass Butterworth filter with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ) using another low pass Butterworth filter with a corner frequency of 0.3 Hz. 
+* Subsequently, the body linear acceleration and angular velocity were derived in time to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ). Also the magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag). 
+* Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals). 
+* These signals were used to estimate variables of the feature vector for each pattern:  
+'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
+
+
+## Transformation Script: run_analysis.R
+* the script transforms some of the files of the database into tiny_data.txt
+* the script has been commented directly
+* this readme contains only a summary of the script in the form of the comments from the script
 
 ## 1 Merges the training and the test sets to create one data set.
-
-First read x_train and x_test, then merge by rbind
-"x_train <- read.table("./UCI HAR Dataset/train/x_train.txt")"
-x_test <- read.table("./UCI HAR Dataset/test/x_test.txt")
-x_merged <- rbind(x_train, x_test)
+* first read x_train and x_test
+* then merge by rbind
 
 ## 2 Extracts only the measurements on the mean and standard deviation for each measurement. 
-
-## First read the features table, then find indices that match mean() or std() with grep,
-## escaping brackets with fixed=TRUE and merging and sorting indices.
-## Finally create subset of data
-features <- read.table("./UCI HAR Dataset/features.txt")
-index_mean <- grep("mean()", features[,2], fixed=TRUE)
-index_std <- grep("std()", features[,2], fixed=TRUE)
-index_total <- sort(c(index_mean, index_std))
-x_merged_subset <- x_merged[,index_total]
+* first read the features table
+* then find indices that match mean() or std() with grep, escaping brackets with fixed=TRUE and merging and sorting indices.
+* finally create subset of data
 
 ## 3 Uses descriptive activity names to name the activities in the data set
-
-## Combine train and test for activities
-y_train <- read.table("./UCI HAR Dataset/train/y_train.txt")
-y_test <- read.table("./UCI HAR Dataset/test/y_test.txt")
-y_merged <- rbind(y_train, y_test)
-
-## read activity labels and then merge with observations, preserving original order
-activity_labels <- read.table("./UCI HAR Dataset/activity_labels.txt")
-y_merged_named <- merge(y_merged, activity_labels, sort = FALSE)
-x_merged_subset$activity <- y_merged_named[,2]
+* combine train and test for activities
+* read activity labels and then merge with observations, preserving original order
 
 ## 4 Appropriately labels the data set with descriptive variable names. 
-names(x_merged_subset) <- features$V2[index_total]
 
 ## 5 From the data set in step 4, creates a second, independent tidy data set 
-## with the average of each variable for each activity and each subject.
+* with the average of each variable for each activity and each subject.
+* first read and merge subjects and add them as an extra column to the data
+* we will use the dplyr package, which we might have to install first
+* then we create the tidy data with group_by and summarise
+* and write tidy data in txt 
 
-## first read and merge subjects and add them as an extra column to the data
-subject_train <- read.table("./UCI HAR Dataset/train/subject_train.txt")
-subject_test <- read.table("./UCI HAR Dataset/test/subject_test.txt")
-subject_merged <- rbind(subject_train, subject_test)
-x_merged_subset <- cbind(x_merged_subset, subject_merged)
-
-## we will use the dplyr package, which we might have to install first
-install.packages("dplyr")
-library(dplyr)
-
-## then we create the tidy data with group_by and summarise
-tidy_data <- x_merged_subset %>% group_by(subject, activity) %>% summarise_each(funs(mean))
-
-## and write tidy data in txt 
-write.table(tidy_data, file = "tidy_data.txt", row.names = FALSE)
-
-## todo: save this script in README.md with script descriptions add codebook
-
-
-## Instructions followed:
-
-## Please upload the tidy data set created in step 5 of the instructions. 
-## Please upload your data set as a txt file created with write.table() 
-## using row.name=FALSE (do not cut and paste a dataset directly into the text box, 
-## as this may cause errors saving your submission).
-
-## Please submit a link to a Github repo with the code for performing your analysis. 
-## The code should have a file run_analysis.R in the main directory that can be run 
-## as long as the Samsung data is in your working directory. 
-## The output should be the tidy data set you submitted for part 1. 
-
-## You should include a README.md in the repo describing how the script works and the code book describing the variables.
