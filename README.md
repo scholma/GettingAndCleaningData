@@ -2,10 +2,10 @@
 
 Original data was obtained from http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones, a Human Activity Recognition database built from the recordings of 30 subjects (persons) performing 6 different kind of activities of daily living (ADL) while carrying a waist-mounted smartphone with embedded inertial sensors.
 
-The tidy_data.txt summarises either mean (mean) or standard deviation (std) of in total 66 different type of measurements for the 30 subjects and 6 activities. The first two columns of the dataset describe:
+The tidy_data.txt summarises either mean (mean) or standard deviation (std) of in total 66 different type of measurements for the 30 subjects and 6 activities for a combined dataset of all training and test data. The first two columns of the dataset describe:
 
-* subject: integer numbered from 1 to 30
-* activity: factor description of the activity, based on video's of the experiment
+* subject: the person performing the experiments, by integer numbered from 1 to 30
+* activity: a description of the activity, based on video's of the experiment, by factor
 
 Remaining colums of the dataset describe the mean or standard deviation of one of the following measurement types:
 
